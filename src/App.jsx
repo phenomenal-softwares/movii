@@ -21,7 +21,7 @@ const App = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await axios.get(`http://www.omdbapi.com/?apikey=f27bfb0c&s=${query}&page=${page}`);
+      const response = await axios.get(`https://www.omdbapi.com/?apikey=f27bfb0c&s=${query}&page=${page}`);
       if (response.data.Response === 'False') {
         setError(response.data.Error);
         setMovies([]);
@@ -39,7 +39,7 @@ const App = () => {
   const fetchMovieDetails = async (id) => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://www.omdbapi.com/?apikey=f27bfb0c&i=${id}`);
+      const response = await axios.get(`https://www.omdbapi.com/?apikey=f27bfb0c&i=${id}`);
       setSelectedMovie(response.data);
     } catch (error) {
       setError('Failed to fetch movie details.');
