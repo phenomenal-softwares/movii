@@ -14,14 +14,13 @@ const App = () => {
   const [error, setError] = useState('');
   const [darkMode, setDarkMode] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState(null);
-  const [query, setQuery] = useState('');
   const [loadingComplete, setLoadingComplete] = useState(false); // New state for loading screen
 
-  const searchMovies = async (query, page = 1) => {
+  const searchMovies = async (query) => {
     setLoading(true);
     setError('');
     try {
-      const response = await axios.get(`https://www.omdbapi.com/?apikey=f27bfb0c&s=${query}&page=${page}`);
+      const response = await axios.get(`https://www.omdbapi.com/?apikey=f27bfb0c&s=${query.trim()}`);
       if (response.data.Response === 'False') {
         setError(response.data.Error);
         setMovies([]);
