@@ -5,6 +5,7 @@ import SearchBar from './SearchBar';
 import MovieList from './MovieList';
 import MovieDetails from './MovieDetails';
 import LoadingSpinner from './LoadingSpinner';
+import Footer from './Footer';
 import './styles.css';
 
 const featuredMovies = [
@@ -83,9 +84,9 @@ const App = () => {
       ) : (
         <>
           <MovieList movies={movies} onMovieSelect={fetchMovieDetails} />
-          
         </>
       )}
+      <Footer />
     </div>
   );
 };
