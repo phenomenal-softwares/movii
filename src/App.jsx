@@ -5,22 +5,32 @@ import SearchBar from './SearchBar';
 import MovieList from './MovieList';
 import MovieDetails from './MovieDetails';
 import LoadingSpinner from './LoadingSpinner';
-import LoadingScreen from './LoadingScreen';
 import './styles.css';
 
+const featuredMovies = [
+  { Title: 'Inception', Year: '2010', imdbID: 'tt1375666', Poster: 'N/A' },
+  { Title: 'The Matrix', Year: '1999', imdbID: 'tt0133093', Poster: 'N/A' },
+  { Title: 'Interstellar', Year: '2014', imdbID: 'tt0816692', Poster: 'N/A' },
+  { Title: 'Parasite', Year: '2019', imdbID: 'tt6751668', Poster: 'N/A' },
+  { Title: 'The Dark Knight', Year: '2008', imdbID: 'tt0468569', Poster: 'N/A' },
+];
+
 const App = () => {
-  const [movies, setMovies] = useState([]);
+  const [movies, setMovies] = useState(() => [
+    featuredMovies[Math.floor(Math.random() * featuredMovies.length)],
+  ]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [darkMode, setDarkMode] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState(null);
-  const [loadingComplete, setLoadingComplete] = useState(false); // New state for loading screen
-
   const searchMovies = async (query) => {
     setLoading(true);
     setError('');
+    setSelectedMovie(null);
     try {
-      const response = await axios.get(`https://www.omdbapi.com/?apikey=f27bfb0c&s=${query.trim()}`);
+      const response = await axios.get('/api/movies', {
+        params: { s: query.trim() },
+      });
       if (response.data.Response === 'False') {
         setError(response.data.Error);
         setMovies([]);
@@ -38,7 +48,9 @@ const App = () => {
   const fetchMovieDetails = async (id) => {
     setLoading(true);
     try {
-      const response = await axios.get(`https://www.omdbapi.com/?apikey=f27bfb0c&i=${id}`);
+      const response = await axios.get('/api/movies', {
+        params: { i: id },
+      });
       setSelectedMovie(response.data);
     } catch (error) {
       setError('Failed to fetch movie details.');
@@ -52,11 +64,6 @@ const App = () => {
     setDarkMode(!darkMode);
     document.body.classList.toggle('dark-mode');
   };
-
-  // Display the loading screen if the app is still loading
-  if (!loadingComplete) {
-    return <LoadingScreen setLoadingComplete={setLoadingComplete} />;
-  }
 
   return (
     <div className="container">

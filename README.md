@@ -1,70 +1,85 @@
-# Getting Started with Create React App
+# Movii
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Movii is a movie search app built with React. It shows a randomly selected
+featured movie on first load, lets you search the OMDb catalog, view movie
+details, and switch between light and dark themes.
 
-## Available Scripts
+Movie data is requested through a server-side Vercel Function. The OMDb API key
+is kept on the server and is not included in the browser bundle.
 
-In the project directory, you can run:
+## Requirements
 
-### `yarn start`
+- Node.js and npm
+- The Vercel CLI for local development
+- An [OMDb API key](https://www.omdbapi.com/apikey.aspx)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Install the Vercel CLI globally if needed:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```sh
+npm install --global vercel
+```
 
-### `yarn test`
+## Setup
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Install project dependencies:
 
-### `yarn build`
+```sh
+npm install
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Create `.env.local` in the project root and add your OMDb API key:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```env
+OMDB_API_KEY=your_api_key
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Do not add the `REACT_APP_` prefix. The key is read only by the server-side
+function. Keep `.env.local` private and do not commit it.
 
-### `yarn eject`
+## Local development
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Start the app and Vercel Function together:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```sh
+npm start
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Open [http://localhost:3001](http://localhost:3001). Use this address rather
+than port 3000 so the browser requests and `/api/movies` function are served by
+Vercel's local development server.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Features
 
-## Learn More
+- Shows a random featured movie as soon as the app opens
+- Searches for movies by title
+- Opens movie details when a result is selected
+- Provides poster placeholders when a movie has no poster
+- Supports light and dark themes
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## API
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+The Vercel Function in `api/movies.js` proxies requests to OMDb:
 
-### Code Splitting
+- `GET /api/movies?s=<search term>` searches for movies
+- `GET /api/movies?i=<IMDb ID>` fetches movie details
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Provide one parameter per request. The function responds with an error if
+`OMDB_API_KEY` is missing or the request to OMDb fails.
 
-### Analyzing the Bundle Size
+## Deploy to Vercel
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+1. Import this repository as a project in Vercel.
+2. Add `OMDB_API_KEY` under **Project Settings → Environment Variables** for
+   the environments where the app should run.
+3. Deploy or redeploy the project.
 
-### Making a Progressive Web App
+The frontend is built with `react-scripts build`; Vercel deploys the `api/`
+function alongside the static build.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Available scripts
 
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+| Command | Description |
+| --- | --- |
+| `npm start` | Start Vercel's local development server on port 3001 |
+| `npm test` | Run the Create React App test runner |
+| `npm run build` | Create an optimized production build in `build/` |
